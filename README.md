@@ -6,8 +6,6 @@ STM32IDEでモーター制御を行う方法を公開します。使用するボ
 ## 回路図
 ![回路図](images/circuit_diagram.png)
 
-## 配線図
-![配線図](images/wiring_diagram.png)
+## 配線図と動作写真
+![配線図](S__7266314.jpg)
 
-## 実際の動作
-![動作の様子](images/motor_operation.gif)
