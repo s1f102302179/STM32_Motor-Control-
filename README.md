@@ -53,7 +53,7 @@ STM32CubeIDEでモーター制御を行う方法を公開します。使用す�
 uint16_t angle_to_duty(uint8_t angle) {
    return 50 + (angle * 50) / 180;
 }
-
+```
 # STM32CubeMX設定ガイド
 
 ## 1. ピン設定
@@ -154,7 +154,7 @@ void servo_set_angle(uint32_t channel, uint8_t angle) {
     uint16_t duty = 50 + (angle * 50) / 180;
     __HAL_TIM_SET_COMPARE(&htim3, channel, duty);
 }
-
+```
 // 使用例
 servo_set_angle(TIM_CHANNEL_1, 0);    // サーボ1を0度
 servo_set_angle(TIM_CHANNEL_2, 180);  // サーボ2を180度
@@ -266,6 +266,7 @@ servo_set_angle(TIM_CHANNEL_2, 180);  // サーボ2を180度
 ---
 
 ## ファイル構成
+```c
 STM32_Motor-Control/
 ├── Core/
 │ ├── Inc/
@@ -286,7 +287,7 @@ STM32_Motor-Control/
 ├── motor_control.ioc
 ├── README.md
 └── LICENSE
-
+```
 
 ---
 
