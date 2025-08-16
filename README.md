@@ -6,7 +6,7 @@ STM32IDEでモーター制御を行う方法を公開します。使用するボ
 ## STM32L476RG ピン配置図
 
 ### チップ詳細
-![STM32L476RG ピンアウト](images/stm32l476rg_pinout.png)
+![STM32L476RG ピンアウト](image.jpg)
 
 **パッケージ**: LQFP64  
 **マイコン**: STM32L476RGTx  
@@ -78,6 +78,7 @@ uint16_t angle_to_duty(uint8_t angle) {
 
 #### 初期化コード
 ```c
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 // TIM1 PWM開始
 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);  // PA8
 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);  // PA9
@@ -99,7 +100,7 @@ servo_set_angle(TIM_CHANNEL_2, 180);  // サーボ2を180度
 
 → main.c　参考
 
-
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
 ## 配線図
 ![配線図](配線図を描画.jpg)
