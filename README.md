@@ -5,7 +5,7 @@ STM32CubeIDEでモーター制御を行う方法を公開します。使用す�
 ## STM32L476RG ピン配置図
 
 ### チップ詳細
-![STM32L476RG ピンアウト](images/stm32l476rg_pinout.png)
+![STM32L476RG ピンアウト](image.jpg)
 
 **パッケージ**: LQFP64  
 **マイコン**: STM32L476RGTx  
@@ -89,8 +89,8 @@ uint16_t angle_to_duty(uint8_t angle) {
 ---
 
 ## 配線図
-📷 `画像を表示`  
-
+📷 `配線図を描画.jpg`  
+![STM32L476RG 配線図](配線図を描画.jpg)
 ---
 
 ## 使用部品
@@ -166,7 +166,7 @@ servo_set_angle(TIM_CHANNEL_2, 180);  // サーボ2を180度
 ---
 
 ## 動作確認
-📷 `実際の動作写真`  
+![STM32L476RG モーター](S__7266314.jpg)
 
 ### 確認できる動作
 - サーボホーン（白いアーム）の回転動作  
