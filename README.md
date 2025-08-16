@@ -3,6 +3,104 @@ STM32IDEでモーター制御を行う方法を公開します。使用するボ
 
 # STM32 Motor Control Project
 
+## STM32L476RG ピン配置図
+
+### チップ詳細
+![STM32L476RG ピンアウト](images/stm32l476rg_pinout.png)
+
+**パッケージ**: LQFP64  
+**マイコン**: STM32L476RGTx  
+**コア**: ARM Cortex-M4 80MHz  
+
+### 本プロジェクトで使用するピン
+
+#### PWM出力ピン（サーボ制御用）
+| ピン番号 | ピン名 | 機能 | 用途 |
+|---------|--------|------|------|
+| 43 | PA8 | TIM1_CH1 | サーボ1制御 |
+| 44 | PA9 | TIM1_CH2 | サーボ2制御 |
+| 45 | PA10 | TIM1_CH3 | 予備PWM |
+
+#### 電源ピン
+| ピン番号 | ピン名 | 機能 | 用途 |
+|---------|--------|------|------|
+| 50 | VDD | 3.3V電源 | メイン電源 |
+| 49 | VSS | グランド | 接地 |
+| 19 | VDDA | アナログ電源 | アナログ回路用 |
+| 18 | VSSA | アナログ接地 | アナログ回路接地 |
+
+#### その他の重要ピン
+| ピン番号 | ピン名 | 機能 | 用途 |
+|---------|--------|------|------|
+| 7 | NRST | リセット | システムリセット |
+| 60 | BOOT0 | ブート選択 | プログラムモード |
+
+### タイマー設定詳細
+
+#### TIM1設定（PWM生成用）
+- **ベースクロック**: 80MHz (システムクロック)
+- **プリスケーラー**: 1599 (80MHz ÷ 1600 = 50kHz)
+- **オートリロード**: 999 (50kHz ÷ 1000 = 50Hz)
+- **結果**: 50Hz PWM信号生成
+
+#### PWMデューティ比計算
+```c
+// サーボ角度制御用の計算式
+// 0°   : デューティ比 = 50  (1ms / 20ms = 5%)
+// 90°  : デューティ比 = 75  (1.5ms / 20ms = 7.5%)
+// 180° : デューティ比 = 100 (2ms / 20ms = 10%)
+
+uint16_t angle_to_duty(uint8_t angle) {
+    return 50 + (angle * 50) / 180;
+}
+
+### **STM32CubeMX設定ガイド**
+```markdown
+### STM32CubeMX設定手順
+
+#### 1. ピン設定
+1. **PA8**を`TIM1_CH1`に設定
+2. **PA9**を`TIM1_CH2`に設定
+3. モードを`PWM Generation CH1`, `PWM Generation CH2`に変更
+
+#### 2. タイマー設定
+#### 3. クロック設定
+- **System Clock**: 80MHz
+- **APB2 Timer Clock**: 80MHz  
+- **PWM周波数**: 50Hz確定
+
+#### 4. GPIO設定確認
+- **PA8, PA9**: Alternate Function Push Pull
+- **Pull-up/Pull-down**: No pull-up and no pull-down
+- **Maximum output speed**: High
+
+### サーボ制御実装例
+
+#### 初期化コード
+```c
+// TIM1 PWM開始
+HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);  // PA8
+HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);  // PA9
+
+// 初期角度設定（90度）
+__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 75);
+__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 75);
+
+void servo_set_angle(uint32_t channel, uint8_t angle) {
+    if (angle > 180) angle = 180;
+    
+    uint16_t duty = 50 + (angle * 50) / 180;
+    __HAL_TIM_SET_COMPARE(&htim1, channel, duty);
+}
+
+// 使用例
+servo_set_angle(TIM_CHANNEL_1, 0);    // サーボ1を0度
+servo_set_angle(TIM_CHANNEL_2, 180);  // サーボ2を180度
+
+→ main.c　参考
+
+
+
 ## 配線図
 ![配線図](配線図を描画.jpg)
 ## STM32L476RG + SG90サーボモーター 配線図
@@ -48,12 +146,12 @@ STM32IDEでモーター制御を行う方法を公開します。使用するボ
 PWM出力の設定は STM32CubeMX の `.ioc` ファイルで確認できます。
 
 ## 動作写真
-![配線図](S__7266314.jpg)
+
 
 ## 動作確認
 
 ### 実際の動作写真
-![動作写真](images/servo_operation.jpg)
+![動作写真](S__7266314.jpg)
 
 ### 動作説明
 上記写真は、STM32L476RGによるSG90サーボモーターの制御動作を示しています。
